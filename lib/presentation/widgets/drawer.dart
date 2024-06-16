@@ -14,18 +14,19 @@ class MyDrawer extends StatelessWidget {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 255, 228, 147),
+              color: Color.fromARGB(255, 93, 150, 255),
             ),
             child: UserAccountsDrawerHeader(
-              decoration:
-                  BoxDecoration(color: Color.fromARGB(255, 255, 228, 147)),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 93, 150, 255),
+              ),
               accountName: Text(
                 "Mohammed Asif",
-                style: TextStyle(fontSize: 18, color: Colors.black),
+                style: TextStyle(fontSize: 18, color: Colors.white),
               ),
               accountEmail: Text(
                 "moh.asif@protonmail.ch",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.white),
               ),
               currentAccountPictureSize: Size.square(30),
               currentAccountPicture: CircleAvatar(

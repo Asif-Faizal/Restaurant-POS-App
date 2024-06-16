@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../widgets/drawer.dart';
 import 'completedpage_view.dart';
@@ -20,59 +21,74 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        drawer: const MyDrawer(),
-        backgroundColor: Colors.amber.shade50,
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              const SliverAppBar(
-                elevation: 10,
-                backgroundColor: Color.fromARGB(255, 255, 228, 147),
-                title: Text(
-                  'Ballast Hotel',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      child: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'lib/assets/bb.jpg'), // Path to your background image
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor:
+              Colors.transparent, // Make the Scaffold background transparent
+          drawer: const MyDrawer(),
+          body: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                const SliverAppBar(
+                  foregroundColor: Colors.white,
+                  elevation: 10,
+                  backgroundColor: Colors.transparent,
+                  title: Text(
+                    'Ballast Hotel',
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                  pinned: true,
+                  floating: true,
+                  bottom: TabBar(
+                    indicatorWeight: 5,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorColor: Color.fromARGB(255, 93, 150, 255),
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          'Home',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Orders',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Completed',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                pinned: true,
-                floating: true,
-                bottom: TabBar(
-                  indicatorWeight: 5,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorColor: Color.fromARGB(255, 255, 191, 0),
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        'Home',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                      ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'Orders',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                      ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'Completed',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                      ),
-                    ),
-                  ],
+              ];
+            },
+            body: TabBarView(
+              children: <Widget>[
+                HomePageView(tableRow: tableRow, totalTables: totalTables),
+                const OrdersPageView(
+                  baseUrl: 'http://10.0.2.2:3000/orders?is_delivered=0',
                 ),
-              ),
-            ];
-          },
-          body: TabBarView(
-            children: <Widget>[
-              HomePageView(tableRow: tableRow, totalTables: totalTables),
-              OrdersPageView(
-                baseUrl: 'http://10.0.2.2:3000/orders?is_delivered=0',
-              ),
-              CompletedpageView(
-                baseUrl: 'http://10.0.2.2:3000/orders?is_delivered=1',
-              ),
-            ],
+                const CompletedpageView(
+                  baseUrl: 'http://10.0.2.2:3000/orders?is_delivered=1',
+                ),
+              ],
+            ),
           ),
         ),
       ),

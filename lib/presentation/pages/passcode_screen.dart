@@ -1,3 +1,4 @@
+import 'package:ballast_machn_test/presentation/pages/server_login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth_bloc.dart';
@@ -59,6 +60,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
                       TextField(
                         controller: _userIdController,
                         decoration: InputDecoration(
+                          suffixIcon: const SizedBox(),
                           prefixIcon: const Icon(Icons.mail_outline_rounded,
                               color: Colors.white),
                           labelText: 'User ID',
@@ -169,6 +171,34 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
                         const SizedBox(height: 20),
                         const CircularProgressIndicator(),
                       ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ServerLoginScreen()));
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.cabin_rounded, color: Colors.white),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'Server Login',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),

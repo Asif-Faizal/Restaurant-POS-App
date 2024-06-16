@@ -43,6 +43,7 @@ class _OrdersPageViewState extends State<OrdersPageViewBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: BlocBuilder<OrderBloc, OrderState>(
         builder: (context, state) {
           if (state is OrderInitial || state is OrderLoading) {
