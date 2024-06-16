@@ -119,6 +119,115 @@ app.delete('/category/:id', async (req, res) => {
     }
 });
 
+//FOOD
+
+app.get('/api/mainstockdupe', async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query('SELECT TOP 10000000 * FROM [dbo].[MainStockDupe]');
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+});
+
+app.get('/api/mainstockdupe/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('Id', sql.Int, id)
+            .query('SELECT * FROM [dbo].[MainStockDupe] WHERE Id = @Id');
+        res.json(result.recordset[0]);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+});
+
+app.post('/api/mainstockdupe', async (req, res) => {
+    const { codeorSKU, category, pdtname, puramntwithtax, saleamnt, tax, totalstock, Date, SERorGOODS, itemMRP, image } = req.body;
+    try {
+        const pool = await poolPromise;
+        await pool.request()
+            .input('codeorSKU', sql.NVarChar, codeorSKU)
+            .input('category', sql.NVarChar, category)
+            .input('pdtname', sql.NVarChar, pdtname)
+            .input('puramntwithtax', sql.Decimal, puramntwithtax)
+            .input('saleamnt', sql.Decimal, saleamnt)
+            .input('tax', sql.Decimal, tax)
+            .input('totalstock', sql.Int, totalstock)
+            .input('Date', sql.DateTime, Date)
+            .input('SERorGOODS', sql.NVarChar, SERorGOODS)
+            .input('image', sql.NVarChar, image)
+            .input('itemMRP', sql.Decimal, itemMRP)
+            .query(`INSERT INTO [dbo].[MainStockDupe] (codeorSKU, category, pdtname, puramntwithtax, saleamnt, tax, totalstock, Date, SERorGOODS, itemMRP, image)
+                    VALUES (@codeorSKU, @category, @pdtname, @puramntwithtax, @saleamnt, @tax, @totalstock, @Date, @SERorGOODS, @itemMRP, @image)`);
+        res.status(201).send({ message: 'Record added successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+});
+
+app.put('/api/mainstockdupe/:id', async (req, res) => {
+    const { id } = req.params;
+    const { codeorSKU, category, pdtname, puramntwithtax, saleamnt, tax, totalstock, Date, SERorGOODS, itemMRP, image } = req.body;
+    try {
+        const pool = await poolPromise;
+        await pool.request()
+            .input('Id', sql.Int, id)
+            .input('codeorSKU', sql.NVarChar, codeorSKU)
+            .input('category', sql.NVarChar, category)
+            .input('pdtname', sql.NVarChar, pdtname)
+            .input('puramntwithtax', sql.Decimal, puramntwithtax)
+            .input('saleamnt', sql.Decimal, saleamnt)
+            .input('tax', sql.Decimal, tax)
+            .input('totalstock', sql.Int, totalstock)
+            .input('Date', sql.DateTime, Date)
+            .input('SERorGOODS', sql.NVarChar, SERorGOODS)
+            .input('itemMRP', sql.Decimal, itemMRP)
+            .input('image', sql.NVarChar, image)
+            .query(`UPDATE [dbo].[MainStockDupe]
+                    SET codeorSKU = @codeorSKU, category = @category, pdtname = @pdtname, puramntwithtax = @puramntwithtax, saleamnt = @saleamnt, tax = @tax, totalstock = @totalstock, Date = @Date, SERorGOODS = @SERorGOODS, itemMRP = @itemMRP, image = @image
+                    WHERE Id = @Id`);
+        res.send({ message: 'Record updated successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+});
+
+app.delete('/api/mainstockdupe/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const pool = await poolPromise;
+        await pool.request()
+            .input('Id', sql.Int, id)
+            .query('DELETE FROM [dbo].[MainStockDupe] WHERE Id = @Id');
+        res.send({ message: 'Record deleted successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+});
+
+// Get item by name endpoint
+app.get('/api/mainstockdupe/name/:name', async (req, res) => {
+    const { name } = req.params;
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('name', sql.NVarChar, name)
+            .query('SELECT * FROM [dbo].[MainStockDupe] WHERE pdtname = @name');
+
+        if (result.recordset.length === 0) {
+            res.status(404).send({ message: 'Item not found' });
+        } else {
+            res.json(result.recordset);
+        }
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+});
+
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
