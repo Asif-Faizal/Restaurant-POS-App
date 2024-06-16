@@ -10,10 +10,10 @@ class FetchCategories {
     final categories = await repository.getCategories();
     return categories
         .map((category) => Category(
-              id: category.id,
-              name: category.name,
-              imageUrl: category.imageUrl,
-            ))
+            Id: category.Id,
+            pdtfilter: category.pdtfilter,
+            image: category.image,
+            SERorGOODS: category.SERorGOODS))
         .toList();
   }
 }

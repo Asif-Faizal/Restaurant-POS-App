@@ -1,7 +1,12 @@
 class Category {
-  final int id;
-  final String name;
-  final String imageUrl;
+  final int Id;
+  final String pdtfilter;
+  final String image;
+  final String SERorGOODS;
 
-  Category({required this.id, required this.name, required this.imageUrl});
+  Category(
+      {required this.Id,
+      required this.pdtfilter,
+      required this.image,
+      required this.SERorGOODS});
 }

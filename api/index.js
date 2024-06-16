@@ -45,7 +45,6 @@ app.post('/login', async (req, res) => {
             .input('username', sql.NVarChar, username)
             .input('password', sql.NVarChar, password)
             .query('SELECT * FROM Login WHERE username = @username AND password = @password');
-        
         if (result.recordset.length === 0) {
             res.status(401).send('Invalid username or password');
         } else {

@@ -24,14 +24,12 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
-                'lib/assets/bb.jpg'), // Path to your background image
+            image: AssetImage('lib/assets/bb.jpg'),
             fit: BoxFit.cover,
           ),
         ),
         child: Scaffold(
-          backgroundColor:
-              Colors.transparent, // Make the Scaffold background transparent
+          backgroundColor: Colors.transparent,
           drawer: const MyDrawer(),
           body: NestedScrollView(
             headerSliverBuilder:
