@@ -33,62 +33,93 @@ class FooditemScreen extends StatelessWidget {
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        ),
-        elevation: 0,
-        backgroundColor: const Color.fromARGB(255, 255, 228, 147),
-        title: Text(
-          'Table $table - $category',
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          ShoppingCartButton(
-            table: table,
-            menuRepository: menuRepository,
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('lib/assets/bb.jpg'),
+              fit: BoxFit.cover,
+            ),
           ),
-          const SizedBox(
-            width: 10,
-          ),
-        ],
-      ),
-      body: BlocBuilder<FoodBloc, FoodState>(
-        builder: (context, state) {
-          if (state is FoodLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is FoodLoaded) {
-            final foods = state.foods;
-            return ListView.builder(
-              padding: const EdgeInsets.all(15),
-              physics: const BouncingScrollPhysics(),
-              itemCount: foods.length,
-              itemBuilder: (context, index) {
-                final food = foods[index];
-                return LayoutBuilder(builder: (context, constraints) {
-                  return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DetailPage(table: table, food: food)));
-                      },
-                      child: FoodTile(food: food));
-                });
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
               },
-            );
-          } else if (state is FoodError) {
-            return const Center(child: Text('Failed to load foods'));
-          } else {
-            return const Center(child: Text('No foods available'));
-          }
-        },
-      ),
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            ),
+            elevation: 0,
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
+            title: Row(
+              children: [
+                Text(
+                  'Table $table',
+                  style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                Hero(
+                  tag: '$category',
+                  child: Text(
+                    ' - $category',
+                    style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                )
+              ],
+            ),
+            actions: [
+              ShoppingCartButton(
+                table: table,
+                menuRepository: menuRepository,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+            ],
+          ),
+          body: BlocBuilder<FoodBloc, FoodState>(
+            builder: (context, state) {
+              if (state is FoodLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is FoodLoaded) {
+                final foods = state.foods;
+                return ListView.builder(
+                  padding: const EdgeInsets.all(15),
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: foods.length,
+                  itemBuilder: (context, index) {
+                    final food = foods[index];
+                    return LayoutBuilder(builder: (context, constraints) {
+                      return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailPage(table: table, food: food)));
+                          },
+                          child: FoodTile(food: food));
+                    });
+                  },
+                );
+              } else if (state is FoodError) {
+                return const Center(child: Text('Failed to load foods'));
+              } else {
+                return const Center(child: Text('No foods available'));
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 }

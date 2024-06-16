@@ -22,7 +22,7 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  String _selectedCategory = 'Services';
+  String? _selectedCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -47,33 +47,7 @@ class _CategoryPageState extends State<CategoryPage> {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      title: const Text('Confirm exit'),
-                      content: Text(
-                          'Are you sure you want to exit the order from ${widget.table}?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Exit'),
-                        ),
-                      ],
-                    );
-                  },
-                );
+                Navigator.pop(context);
               },
               icon: const Icon(Icons.arrow_back_ios_new_rounded),
             ),
@@ -143,7 +117,7 @@ class _CategoryPageState extends State<CategoryPage> {
                               groupValue: _selectedCategory,
                               onChanged: (value) {
                                 setState(() {
-                                  _selectedCategory = value!;
+                                  _selectedCategory = value;
                                 });
                               },
                               activeColor: Colors.white,
@@ -161,7 +135,7 @@ class _CategoryPageState extends State<CategoryPage> {
                               groupValue: _selectedCategory,
                               onChanged: (value) {
                                 setState(() {
-                                  _selectedCategory = value!;
+                                  _selectedCategory = value;
                                 });
                               },
                               activeColor: Colors.white,
@@ -198,8 +172,15 @@ class _CategoryPageState extends State<CategoryPage> {
     if (state is CategoryLoading) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is CategoryLoaded) {
+      // Filter categories based on _selectedCategory
+      final filteredCategories = _selectedCategory == null
+          ? state.categories
+          : state.categories
+              .where((category) => category.SERorGOODS == _selectedCategory)
+              .toList();
+
       return GridView.builder(
-        itemCount: state.categories.length,
+        itemCount: filteredCategories.length,
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -208,8 +189,11 @@ class _CategoryPageState extends State<CategoryPage> {
           crossAxisSpacing: 5,
         ),
         itemBuilder: (context, index) {
-          final item = state.categories[index];
-          return CategoryTile(item: item, table: widget.table);
+          final item = filteredCategories[index];
+          return CategoryTile(
+            item: item,
+            table: widget.table,
+          );
         },
       );
     } else if (state is CategoryError) {
