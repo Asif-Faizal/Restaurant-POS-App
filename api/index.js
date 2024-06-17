@@ -228,6 +228,26 @@ app.get('/api/mainstockdupe/name/:name', async (req, res) => {
 });
 
 
+// Get item by Category endpoint
+app.get('/api/mainstockdupe/category/:category', async (req, res) => {
+    const { category } = req.params;
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('category', sql.NVarChar, category)
+            .query('SELECT * FROM [dbo].[MainStockDupe] WHERE category = @category');
+
+        if (result.recordset.length === 0) {
+            res.status(404).send({ message: 'Item not found' });
+        } else {
+            res.json(result.recordset);
+        }
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+});
+
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
