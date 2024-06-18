@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ballast_machn_test/presentation/widgets/menu_button.dart';
-
 import '../../data/providers/category_api_provider.dart';
-import '../../data/providers/menu_api_providers.dart';
 import '../../data/repositories/category_repository.dart';
-import '../../data/repositories/menu_repository.dart';
 import '../../domain/usecases/fetch_categories.dart';
 import '../blocs/category/category_bloc.dart';
 import '../blocs/category/category_event.dart';
@@ -26,12 +22,6 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final MenuRepository menuRepository = MenuRepository(
-      apiProvider: MenuApiProvider(
-        baseUrl: 'http://10.0.2.2:3000',
-      ),
-    );
-
     return Stack(
       children: [
         Container(
@@ -62,10 +52,6 @@ class _CategoryPageState extends State<CategoryPage> {
                   color: Colors.white),
             ),
             actions: [
-              ShoppingCartButton(
-                table: widget.table,
-                menuRepository: menuRepository,
-              ),
               const SizedBox(
                 width: 10,
               ),

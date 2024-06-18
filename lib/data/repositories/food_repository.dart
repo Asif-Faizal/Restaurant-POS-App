@@ -1,17 +1,10 @@
-import 'package:ballast_machn_test/data/providers/food_api_provider.dart';
-
 import '../models/food_model.dart';
+import '../providers/food_api_provider.dart';
 
 class FoodRepository {
-  final FoodApiProvider apiProvider;
+  final FoodApiProvider _apiProvider = FoodApiProvider();
 
-  FoodRepository({required this.apiProvider});
-
-  Future<List<Food>> fetchFoodsByCategory(int categoryId) {
-    return apiProvider.fetchFoodsByCategory(categoryId);
-  }
-
-  Future<Food> fetchFoodsByName(String name) {
-    return apiProvider.fetchFoodByName(name);
+  Future<List<Food>> getFoodsByCategory(String category) {
+    return _apiProvider.fetchFoodsByCategory(category);
   }
 }

@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/tax_type_bloc.dart';
 import '../pages/passcode_screen.dart';
 
 class MyDrawer extends StatefulWidget {
-  const MyDrawer({
-    super.key,
-  });
+  const MyDrawer({Key? key}) : super(key: key);
 
   @override
   State<MyDrawer> createState() => _MyDrawerState();
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  bool _inclusiveTax = true;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -46,69 +44,65 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
             ListTile(
-                title: const Text(
-                  'Tax Type',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+              title: const Text(
+                'Tax Type',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-                trailing: SizedBox(
-                  height: 40,
-                  child: ToggleButtons(
-                    borderWidth: 3,
-                    borderColor: Colors.white,
-                    disabledBorderColor: Colors.white,
-                    selectedBorderColor: Colors.white,
-                    onPressed: (int index) {
-                      setState(() {
-                        if (index == 0) {
-                          _inclusiveTax = true;
-                          print('Inclusive Tax selected');
-                        } else {
-                          _inclusiveTax = false;
-                          print('Exclusive Tax selected');
-                        }
-                      });
-                    },
-                    isSelected: [_inclusiveTax, !_inclusiveTax],
-                    borderRadius: BorderRadius.circular(10),
-                    selectedColor: Colors.white,
-                    fillColor: Colors.white,
-                    children: [
-                      Container(
-                        height: 20,
-                        width: 60,
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Inclusive',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: _inclusiveTax ? Colors.black : Colors.white,
+              ),
+              trailing: SizedBox(
+                height: 40,
+                child: BlocBuilder<TaxTypeBloc, TaxTypeState>(
+                  builder: (context, state) {
+                    bool isInclusive = state is InclusiveTax;
+                    return ToggleButtons(
+                      borderWidth: 3,
+                      borderColor: Colors.white,
+                      disabledBorderColor: Colors.white,
+                      selectedBorderColor: Colors.white,
+                      onPressed: (int index) {
+                        context.read<TaxTypeBloc>().add(ToggleTaxType());
+                      },
+                      isSelected: [isInclusive, !isInclusive],
+                      borderRadius: BorderRadius.circular(10),
+                      selectedColor: Colors.white,
+                      fillColor: Colors.white,
+                      children: [
+                        Container(
+                          height: 20,
+                          width: 60,
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Inclusive',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: isInclusive ? Colors.black : Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        height: 20,
-                        width: 60,
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Exclusive',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: !_inclusiveTax ? Colors.black : Colors.white,
+                        Container(
+                          height: 20,
+                          width: 60,
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Exclusive',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: !isInclusive ? Colors.black : Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                )),
-            const Divider(
-              color: Colors.white,
+                      ],
+                    );
+                  },
+                ),
+              ),
             ),
+            const Divider(color: Colors.white),
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
@@ -125,9 +119,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
             ),
-            const Divider(
-              color: Colors.white,
-            )
+            const Divider(color: Colors.white),
           ],
         ),
       ),

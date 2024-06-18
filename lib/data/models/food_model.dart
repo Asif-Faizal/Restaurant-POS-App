@@ -1,28 +1,48 @@
 class Food {
   final int id;
-  final String name;
+  final String codeOrSKU;
+  final String category;
+  final String pdtName;
+  final double? purAmtWithTax;
+  final double saleAmt;
+  final double tax;
+  final int totalStock;
+  final DateTime date;
+  final String serOrGoods;
+  final double itemMRP;
   final String image;
-  final int price;
-  final int extraslist;
-  final int categoryid;
 
   Food({
     required this.id,
-    required this.name,
+    required this.codeOrSKU,
+    required this.category,
+    required this.pdtName,
+    this.purAmtWithTax,
+    required this.saleAmt,
+    required this.tax,
+    required this.totalStock,
+    required this.date,
+    required this.serOrGoods,
+    required this.itemMRP,
     required this.image,
-    required this.price,
-    required this.extraslist,
-    required this.categoryid,
   });
 
   factory Food.fromJson(Map<String, dynamic> json) {
     return Food(
-      id: json['id'],
-      name: json['name'],
+      id: json['Id'],
+      codeOrSKU: json['codeorSKU'],
+      category: json['category'],
+      pdtName: json['pdtname'],
+      purAmtWithTax: json['puramntwithtax'] != null
+          ? double.parse(json['puramntwithtax'])
+          : null,
+      saleAmt: double.parse(json['saleamnt'].toString()),
+      tax: double.parse(json['tax'].toString()),
+      totalStock: json['totalstock'],
+      date: DateTime.parse(json['Date']),
+      serOrGoods: json['SERorGOODS'],
+      itemMRP: double.parse(json['itemMRP'].toString()),
       image: json['image'],
-      price: json['price'],
-      extraslist: json['extraslist'],
-      categoryid: json['categoryid'],
     );
   }
 }

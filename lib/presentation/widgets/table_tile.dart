@@ -26,14 +26,14 @@ class TableTile extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               gradient: RadialGradient(
-                colors: [Colors.blue.shade200, Colors.blue.shade600],
+                colors: [Colors.blue.shade50, Colors.blue.shade400],
                 center: Alignment.center,
                 radius: 0.85,
                 focal: Alignment.center,
                 focalRadius: 0.1,
               ),
               borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.blue.shade900, width: 1)),
+              border: Border.all(color: Colors.blue.shade900, width: 2)),
           child: Center(
             child: Text(
               'Table ${index + 1}',

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import '../../../data/models/food_model.dart';
 
 abstract class FoodState extends Equatable {

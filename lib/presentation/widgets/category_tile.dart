@@ -20,12 +20,7 @@ class CategoryTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FooditemScreen(
-              table: table,
-              itemCount: 10,
-              category: item.pdtfilter,
-              categoryId: item.Id,
-            ),
+            builder: (context) => FoodItemScreen(category: item.pdtfilter),
           ),
         );
       },

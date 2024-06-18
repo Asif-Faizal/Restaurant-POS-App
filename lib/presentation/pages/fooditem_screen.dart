@@ -1,42 +1,23 @@
-import 'package:ballast_machn_test/presentation/pages/fooddetails_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/providers/menu_api_providers.dart';
-import '../../data/repositories/menu_repository.dart';
+import '../../data/repositories/food_repository.dart';
+import '../../domain/usecases/fetch_food.dart';
 import '../blocs/food/food_bloc.dart';
 import '../blocs/food/food_event.dart';
 import '../blocs/food/food_state.dart';
-import '../widgets/food_tile.dart';
-import '../widgets/menu_button.dart';
+import 'fooddetails_screen.dart';
 
-class FooditemScreen extends StatelessWidget {
-  final String table;
+class FoodItemScreen extends StatelessWidget {
   final String category;
-  final int categoryId;
-  final int itemCount;
 
-  const FooditemScreen({
-    super.key,
-    required this.table,
-    required this.itemCount,
-    required this.category,
-    required this.categoryId,
-  });
+  const FoodItemScreen({Key? key, required this.category}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final foodBloc = BlocProvider.of<FoodBloc>(context);
-    foodBloc.add(FetchFoodsEvent(categoryId));
-    final MenuRepository menuRepository = MenuRepository(
-      apiProvider: MenuApiProvider(
-        baseUrl: 'http://10.0.2.2:3000',
-      ),
-    );
-
     return Stack(
       children: [
         Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('lib/assets/bb.jpg'),
               fit: BoxFit.cover,
@@ -46,77 +27,104 @@ class FooditemScreen extends StatelessWidget {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            foregroundColor: Colors.white,
             leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.arrow_back_ios_new_rounded),
             ),
-            elevation: 0,
-            foregroundColor: Colors.white,
             backgroundColor: Colors.transparent,
-            title: Row(
-              children: [
-                Text(
-                  'Table $table',
-                  style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                Hero(
-                  tag: '$category',
-                  child: Text(
-                    ' - $category',
-                    style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                )
-              ],
+            title: Text(
+              '$category',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            actions: [
-              ShoppingCartButton(
-                table: table,
-                menuRepository: menuRepository,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-            ],
           ),
-          body: BlocBuilder<FoodBloc, FoodState>(
-            builder: (context, state) {
-              if (state is FoodLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is FoodLoaded) {
-                final foods = state.foods;
-                return ListView.builder(
-                  padding: const EdgeInsets.all(15),
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: foods.length,
-                  itemBuilder: (context, index) {
-                    final food = foods[index];
-                    return LayoutBuilder(builder: (context, constraints) {
-                      return GestureDetector(
+          body: Padding(
+            padding: const EdgeInsets.all(15),
+            child: BlocProvider(
+              create: (context) => FoodBloc(FetchFoodUseCase(FoodRepository()))
+                ..add(FetchFood(category)),
+              child: BlocBuilder<FoodBloc, FoodState>(
+                builder: (context, state) {
+                  if (state is FoodLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is FoodLoaded) {
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                        childAspectRatio: 0.8,
+                      ),
+                      itemCount: state.foods.length,
+                      itemBuilder: (context, index) {
+                        final food = state.foods[index];
+                        return GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        DetailPage(table: table, food: food)));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    FoodDetailsPage(food: food),
+                              ),
+                            );
                           },
-                          child: FoodTile(food: food));
-                    });
-                  },
-                );
-              } else if (state is FoodError) {
-                return const Center(child: Text('Failed to load foods'));
-              } else {
-                return const Center(child: Text('No foods available'));
-              }
-            },
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(5)),
+                                    child: Image.network(
+                                      food.image,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, top: 5),
+                                  child: Text(
+                                    food.pdtName,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 5),
+                                  child: Text(
+                                    '\$${food.saleAmt}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else if (state is FoodError) {
+                    return Center(child: Text(state.message));
+                  } else {
+                    return Center(child: Text('Select a category'));
+                  }
+                },
+              ),
+            ),
           ),
         ),
       ],
