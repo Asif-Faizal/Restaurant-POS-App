@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ballast_machn_test/presentation/widgets/drawer.dart';
 import '../../data/models/food_model.dart';
 import '../blocs/tax_type_bloc.dart';
+import '../widgets/custom_button.dart';
 
 class FoodDetailsPage extends StatefulWidget {
   final Food food;
@@ -30,6 +31,12 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
         _quantity--;
       }
     });
+  }
+
+  void _addToMenu() {
+    // Perform the action you want when adding to the menu
+    print('Adding ${widget.food.pdtName} to the menu');
+    // Here you can add more logic, such as adding to a cart or updating a database
   }
 
   @override
@@ -219,16 +226,9 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
           ),
           bottomNavigationBar: BottomAppBar(
             color: Colors.transparent,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-              ),
-              onPressed: () {},
-              child: Text('Add to Menu'),
+            child: MyButton(
+              onPressed: _addToMenu,
+              text: 'Add to Menu',
             ),
           ),
         ),

@@ -11,7 +11,7 @@ class CategoryTile extends StatelessWidget {
   });
 
   final Category item;
-  final String table;
+  final int table;
 
   @override
   Widget build(BuildContext context) {

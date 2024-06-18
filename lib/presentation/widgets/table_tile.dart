@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-
-import '../pages/catogory_screen.dart';
+import 'customerinfo_sheet.dart';
 
 class TableTile extends StatelessWidget {
   final int index;
   const TableTile({
-    super.key,
+    Key? key,
     required this.index,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CategoryPage(
-                      table: '${index + 1}',
-                    )));
+        _showCustomerForm(context, index); // Pass context and index here
       },
       child: Card(
         elevation: 5,
@@ -45,6 +39,18 @@ class TableTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showCustomerForm(BuildContext context, int index) {
+    showModalBottomSheet(
+      backgroundColor: Colors.blue.shade900,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(5.0)),
+      ),
+      context: context,
+      builder: (context) =>
+          CustomerForm(index: index), // Pass index to CustomerForm
     );
   }
 }

@@ -9,9 +9,15 @@ import '../blocs/category/category_state.dart';
 import '../widgets/category_tile.dart';
 
 class CategoryPage extends StatefulWidget {
-  final String table;
+  final int table;
+  final String name;
+  final String number;
 
-  const CategoryPage({super.key, required this.table});
+  const CategoryPage(
+      {super.key,
+      required this.table,
+      required this.name,
+      required this.number});
 
   @override
   _CategoryPageState createState() => _CategoryPageState();
@@ -45,7 +51,7 @@ class _CategoryPageState extends State<CategoryPage> {
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.white,
             title: Text(
-              'Table ${widget.table}',
+              'Table ${widget.table} - ${widget.name}',
               style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

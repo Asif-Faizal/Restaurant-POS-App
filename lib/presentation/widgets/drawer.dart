@@ -105,7 +105,7 @@ class _MyDrawerState extends State<MyDrawer> {
             const Divider(color: Colors.white),
             GestureDetector(
               onTap: () {
-                Navigator.push(context,
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => PasscodeScreen()));
               },
               child: const ListTile(
