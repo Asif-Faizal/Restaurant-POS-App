@@ -185,6 +185,8 @@ class _CategoryPageState extends State<CategoryPage> {
           return CategoryTile(
             item: item,
             table: widget.table,
+            customerName: widget.name,
+            customerNum: widget.number,
           );
         },
       );

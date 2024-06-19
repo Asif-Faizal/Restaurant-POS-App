@@ -9,8 +9,17 @@ import 'fooddetails_screen.dart';
 
 class FoodItemScreen extends StatelessWidget {
   final String category;
+  final int table;
+  final String customerName;
+  final String customerNum;
 
-  const FoodItemScreen({Key? key, required this.category}) : super(key: key);
+  const FoodItemScreen(
+      {Key? key,
+      required this.category,
+      required this.table,
+      required this.customerName,
+      required this.customerNum})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +74,12 @@ class FoodItemScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    FoodDetailsPage(food: food),
+                                builder: (context) => FoodDetailsPage(
+                                  food: food,
+                                  customerName: customerName,
+                                  customerNum: customerNum,
+                                  table: table,
+                                ),
                               ),
                             );
                           },

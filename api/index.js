@@ -276,7 +276,7 @@ app.post('/api/order-details', async (req, res) => {
             KOTNo = existingOrder.recordset[0].KOTNo;
         } else {
             // Generate new OrderNumber and KOTNo
-            const shortId = generateShortId(3); // Generate a 6-character unique identifier
+            const shortId = generateShortId(5); // Generate a 6-character unique identifier
             OrderNumber = `ORD${shortId}`;
             KOTNo = `KOT${shortId}`;
         }
@@ -483,6 +483,31 @@ app.put('/api/orders/:orderNumber', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
+
+// Endpoint to get OrderNumber by CustomerName and TableName
+app.get('/api/order-number', async (req, res) => {
+    const { CustomerName, TableName } = req.query;
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('CustomerName', sql.NVarChar, CustomerName)
+            .input('TableName', sql.NVarChar, TableName)
+            .query('SELECT TOP 1 OrderNumber FROM [RestaurantDB].[dbo].[OrderItemDetailsDetails] WHERE CustomerName = @CustomerName AND TableName = @TableName');
+
+        if (result.recordset.length > 0) {
+            const orderNumber = result.recordset[0].OrderNumber;
+            res.status(200).send({ orderNumber });
+        } else {
+            res.status(404).send({ message: 'No order found for the specified CustomerName and TableName' });
+        }
+    } catch (err) {
+        console.error('Error fetching order number:', err);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+});
+
+
 
 // Get all active orders
 app.get('/api/orders/active', async (req, res) => {

@@ -8,10 +8,14 @@ class CategoryTile extends StatelessWidget {
     super.key,
     required this.item,
     required this.table,
+    required this.customerName,
+    required this.customerNum,
   });
 
   final Category item;
   final int table;
+  final String customerName;
+  final String customerNum;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,12 @@ class CategoryTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FoodItemScreen(category: item.pdtfilter),
+            builder: (context) => FoodItemScreen(
+              category: item.pdtfilter,
+              table: table,
+              customerName: customerName,
+              customerNum: customerNum,
+            ),
           ),
         );
       },
