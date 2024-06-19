@@ -1,3 +1,4 @@
+import 'package:ballast_machn_test/presentation/widgets/Custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -91,6 +92,22 @@ class _MenuPageState extends State<MenuPage> {
                 );
               }
             },
+          ),
+          bottomNavigationBar: BottomAppBar(
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                MyButton(
+                  onPressed: () {},
+                  text: 'Print KOT',
+                ),
+                MyButton(
+                  onPressed: () {},
+                  text: 'Take Order',
+                ),
+              ],
+            ),
           ),
         ),
       ],
