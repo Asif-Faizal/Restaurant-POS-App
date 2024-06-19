@@ -57,8 +57,19 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
   Future<void> _addToMenu() async {
     double subtotal = widget.food.saleAmt * _quantity;
-    double taxAmount = subtotal * widget.food.tax / (100 + widget.food.tax);
-    double totalAmount = subtotal + taxAmount;
+    double amountBeforeTax = subtotal;
+    double taxAmount;
+    double totalAmount;
+
+    if (context.read<TaxTypeBloc>().state is InclusiveTax) {
+      double amountBeforeTaxInclusive =
+          amountBeforeTax / (1 + widget.food.tax / 100);
+      taxAmount = amountBeforeTax - amountBeforeTaxInclusive;
+      totalAmount = amountBeforeTaxInclusive + taxAmount;
+    } else {
+      taxAmount = amountBeforeTax * widget.food.tax / 100;
+      totalAmount = amountBeforeTax + taxAmount;
+    }
 
     final orderDetails = {
       "UserId": 101,
@@ -72,9 +83,10 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
       "salePrice": widget.food.saleAmt,
       "Qty": _quantity,
       "TotalsalePrice": subtotal,
+      "AmountBeforeTax": amountBeforeTax,
       "GST": widget.food.tax,
       "GSTAmount": taxAmount,
-      "inclusiceSaleprice": totalAmount,
+      "TotalAmount": totalAmount,
       "ActiveInnactive": "Active"
     };
 
@@ -126,8 +138,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
         List<dynamic> data = json.decode(response.body);
         if (data.isNotEmpty) {
           setState(() {
-            orderNumber = data[0]
-                ['OrderNumber']; // Assuming OrderNumber is the field name
+            orderNumber = data[0]['OrderNumber'];
           });
         } else {
           throw Exception('Order not found');
@@ -304,14 +315,19 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                 BlocBuilder<TaxTypeBloc, TaxTypeState>(
                   builder: (context, state) {
                     double subtotal = widget.food.saleAmt * _quantity;
-                    double taxAmount = 0;
+                    double amountBeforeTax = subtotal;
+                    double taxAmount;
+                    double totalAmount;
+
                     if (state is InclusiveTax) {
-                      taxAmount =
-                          subtotal * widget.food.tax / (100 + widget.food.tax);
+                      double amountBeforeTaxInclusive =
+                          amountBeforeTax / (1 + widget.food.tax / 100);
+                      taxAmount = amountBeforeTax - amountBeforeTaxInclusive;
+                      totalAmount = amountBeforeTaxInclusive + taxAmount;
                     } else {
-                      taxAmount = subtotal * widget.food.tax / 100;
+                      taxAmount = amountBeforeTax * widget.food.tax / 100;
+                      totalAmount = amountBeforeTax + taxAmount;
                     }
-                    double totalAmount = subtotal + taxAmount;
 
                     return Card(
                       color: Colors.blue.shade100,
@@ -333,7 +349,12 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                                   'Price ( ${widget.food.saleAmt.toInt()} x $_quantity )',
                                 ),
                                 const Spacer(),
-                                Text('${subtotal.toInt()}'),
+                                if (state is InclusiveTax)
+                                  Text(
+                                      '${(widget.food.saleAmt.toInt() * _quantity - taxAmount).toStringAsFixed(3)}')
+                                else
+                                  Text(
+                                      '${widget.food.saleAmt.toInt() * _quantity}'),
                               ],
                             ),
                             Row(
