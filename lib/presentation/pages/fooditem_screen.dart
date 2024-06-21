@@ -6,19 +6,18 @@ import '../blocs/food/food_bloc.dart';
 import '../blocs/food/food_event.dart';
 import '../blocs/food/food_state.dart';
 import 'fooddetails_screen.dart';
+import 'menu_screen.dart';
 
 class FoodItemScreen extends StatelessWidget {
   final String category;
   final int table;
   final String customerName;
-  final String customerNum;
 
   const FoodItemScreen(
       {Key? key,
       required this.category,
       required this.table,
-      required this.customerName,
-      required this.customerNum})
+      required this.customerName})
       : super(key: key);
 
   @override
@@ -36,6 +35,24 @@ class FoodItemScreen extends StatelessWidget {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MenuPage(
+                              customerNumber: customerName,
+                              table: table.toInt(),
+                            )),
+                  );
+                },
+                child: Icon(Icons.note),
+              ),
+              SizedBox(
+                width: 10,
+              )
+            ],
             foregroundColor: Colors.white,
             leading: IconButton(
               onPressed: () {
@@ -77,7 +94,6 @@ class FoodItemScreen extends StatelessWidget {
                                 builder: (context) => FoodDetailsPage(
                                   food: food,
                                   customerName: customerName,
-                                  customerNum: customerNum,
                                   table: table,
                                 ),
                               ),

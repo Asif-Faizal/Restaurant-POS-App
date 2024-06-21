@@ -1,3 +1,5 @@
+import 'package:ballast_machn_test/presentation/pages/fooddetails_screen.dart';
+import 'package:ballast_machn_test/presentation/pages/menu_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/providers/category_api_provider.dart';
@@ -11,13 +13,8 @@ import '../widgets/category_tile.dart';
 class CategoryPage extends StatefulWidget {
   final int table;
   final String name;
-  final String number;
 
-  const CategoryPage(
-      {super.key,
-      required this.table,
-      required this.name,
-      required this.number});
+  const CategoryPage({super.key, required this.table, required this.name});
 
   @override
   _CategoryPageState createState() => _CategoryPageState();
@@ -41,6 +38,24 @@ class _CategoryPageState extends State<CategoryPage> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MenuPage(
+                              customerNumber: widget.name,
+                              table: widget.table.toInt(),
+                            )),
+                  );
+                },
+                child: Icon(Icons.note),
+              ),
+              SizedBox(
+                width: 10,
+              )
+            ],
             leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -57,11 +72,6 @@ class _CategoryPageState extends State<CategoryPage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
-            actions: [
-              const SizedBox(
-                width: 10,
-              ),
-            ],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(150),
               child: Padding(
@@ -78,7 +88,15 @@ class _CategoryPageState extends State<CategoryPage> {
                           suffixIcon: Container(
                             padding: const EdgeInsets.all(5),
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => FoodDetailsPage(
+                                //             food: ,
+                                //             customerName: widget.name,
+                                //             table: widget.table)));
+                              },
                               style: ElevatedButton.styleFrom(
                                 elevation: 5,
                                 padding: const EdgeInsets.all(5),
@@ -186,7 +204,6 @@ class _CategoryPageState extends State<CategoryPage> {
             item: item,
             table: widget.table,
             customerName: widget.name,
-            customerNum: widget.number,
           );
         },
       );

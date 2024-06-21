@@ -12,14 +12,12 @@ import '../pages/menu_screen.dart';
 class FoodDetailsPage extends StatefulWidget {
   final Food food;
   final String customerName;
-  final String customerNum;
   final int table;
 
   const FoodDetailsPage({
     Key? key,
     required this.food,
     required this.customerName,
-    required this.customerNum,
     required this.table,
   }) : super(key: key);
 
@@ -30,13 +28,13 @@ class FoodDetailsPage extends StatefulWidget {
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
   int _quantity = 1;
   List<Order> orders = [];
-  String orderNumber = ''; // Variable to hold the fetched order number
+  String orderNumber = '';
 
   @override
   void initState() {
     super.initState();
     _fetchOrders();
-    _fetchOrderNumber(); // Call to fetch order number when initializing
+    _fetchOrderNumber();
   }
 
   void _incrementQuantity() {
@@ -74,7 +72,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
     final orderDetails = {
       "UserId": 101,
       "UserName": "Counter Sale",
-      "CustomerId": widget.customerNum,
+      "CustomerId": 101,
       "CustomerName": widget.customerName,
       "TableName": widget.table,
       "StartDateTime": DateTime.now().toString(),
@@ -99,19 +97,20 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
         body: json.encode(orderDetails),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green,
-            content: Text('Order added to menu successfully!'),
+            content: Text(
+                '$_quantity ${widget.food.pdtName} added to menu successfully!'),
             behavior: SnackBarBehavior.floating,
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             backgroundColor: Colors.red,
-            content: Text('Failed to add order to menu'),
+            content: Text('Failed to Add'),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -179,7 +178,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
     return Stack(
       children: [
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('lib/assets/bb.jpg'),
               fit: BoxFit.cover,
@@ -187,7 +186,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
           ),
         ),
         Scaffold(
-          drawer: MyDrawer(),
+          drawer: const MyDrawer(),
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             actions: [
@@ -195,17 +194,24 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MenuPage()),
+                    MaterialPageRoute(
+                        builder: (context) => MenuPage(
+                              customerNumber: widget.customerName,
+                              table: widget.table.toInt(),
+                            )),
                   );
                 },
-                child: Icon(Icons.list),
+                child: const Icon(Icons.note),
+              ),
+              const SizedBox(
+                width: 10,
               )
             ],
             foregroundColor: Colors.white,
             backgroundColor: Colors.transparent,
             title: Text(
               widget.food.pdtName,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           body: Padding(
@@ -232,7 +238,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
@@ -240,7 +246,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     children: [
                       Text(
                         widget.food.pdtName,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -248,7 +254,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                       ),
                       Text(
                         '₹ ${widget.food.saleAmt.toInt()}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -359,7 +365,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                             ),
                             Row(
                               children: [
-                                Text('Tax'),
+                                const Text('Tax'),
                                 const Spacer(),
                                 Text(
                                   taxAmount.toStringAsFixed(2),

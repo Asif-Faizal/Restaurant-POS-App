@@ -12,21 +12,17 @@ class CustomerForm extends StatefulWidget {
 
 class _CustomerFormState extends State<CustomerForm> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _numberController = TextEditingController();
 
   void _submit() {
     String name = _nameController.text;
-    String number = _numberController.text;
-    if (name.isNotEmpty && number.isNotEmpty) {
+    if (name.isNotEmpty) {
       print('Customer Name: $name');
-      print('Customer Number: $number');
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CategoryPage(
             table: widget.index,
             name: name,
-            number: number,
           ),
         ),
       );
@@ -72,29 +68,6 @@ class _CustomerFormState extends State<CustomerForm> {
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0),
                 ),
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: _numberController,
-                decoration: InputDecoration(
-                  labelText: 'Customer Number',
-                  labelStyle: TextStyle(color: Colors.white),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0),
-                ),
-                keyboardType: TextInputType.phone,
                 style: TextStyle(color: Colors.white),
               ),
             ),
