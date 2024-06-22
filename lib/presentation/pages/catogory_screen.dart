@@ -2,6 +2,9 @@ import 'package:ballast_machn_test/presentation/pages/fooddetails_screen.dart';
 import 'package:ballast_machn_test/presentation/pages/menu_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../../data/models/food_model.dart';
 import '../../data/providers/category_api_provider.dart';
 import '../../data/repositories/category_repository.dart';
 import '../../domain/usecases/fetch_categories.dart';
@@ -22,6 +25,7 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   String? _selectedCategory;
+  TextEditingController _foodsearch = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -82,20 +86,23 @@ class _CategoryPageState extends State<CategoryPage> {
                       elevation: 5,
                       borderRadius: BorderRadius.circular(10),
                       child: TextField(
+                        controller: _foodsearch,
                         decoration: InputDecoration(
                           hintText: 'Search Foods...',
                           prefixIcon: const Icon(Icons.search),
                           suffixIcon: Container(
                             padding: const EdgeInsets.all(5),
                             child: ElevatedButton(
-                              onPressed: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => FoodDetailsPage(
-                                //             food: ,
-                                //             customerName: widget.name,
-                                //             table: widget.table)));
+                              onPressed: () async {
+                                final food = await getFoodBasedOnSearch(
+                                    _foodsearch.text);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FoodDetailsPage(
+                                            food: food,
+                                            customerName: widget.name,
+                                            table: widget.table)));
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 5,
@@ -176,6 +183,23 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
       ],
     );
+  }
+
+  // Function to get Food object based on search text
+  Future<Food> getFoodBasedOnSearch(String searchText) async {
+    final response = await http.get(
+        Uri.parse('http://10.0.2.2:3000/api/mainstockdupe/name/$searchText'));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List;
+      if (jsonData.isNotEmpty) {
+        return Food.fromJson(jsonData[0]);
+      } else {
+        throw Exception('Food not found');
+      }
+    } else {
+      throw Exception('Failed to load food');
+    }
   }
 
   Widget _buildBody(CategoryState state, BuildContext context) {

@@ -128,7 +128,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
   Future<void> _fetchOrderNumber() async {
     final url = Uri.parse(
-        'http://localhost:3000/api/orders/${widget.customerName}/${widget.table}');
+        'http://10.0.2.2:3000/api/orders/${widget.customerName}/${widget.table}');
 
     try {
       final response = await http.get(url);
@@ -152,7 +152,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
   Future<void> _fetchOrders() async {
     final url = Uri.parse(
-        'http://localhost:3000/api/orders/${widget.customerName}/${widget.table}');
+        'http://10.0.2.2:3000/api/orders/${widget.customerName}/${widget.table}');
 
     try {
       final response = await http.get(url);
